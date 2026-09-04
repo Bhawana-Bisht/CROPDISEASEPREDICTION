@@ -387,6 +387,7 @@ if predict_btn:
                 uploaded_file.getbuffer()
             )
 
+
         # ---------------- LOADING ANIMATION ----------------
 
         with st.status(
@@ -412,14 +413,11 @@ if predict_btn:
 
             time.sleep(1)
 
+
         try:
 
             # ---------------------------------
             # DIRECT MODEL PREDICTION
-            # ---------------------------------
-            # IMPORTANT:
-            # No Flask API / localhost required.
-            # Uses your existing prediction logic.
             # ---------------------------------
 
             result = predict_disease(
@@ -427,6 +425,7 @@ if predict_btn:
                 user_query,
                 selected_language
             )
+
 
             disease = result.get(
                 "disease",
@@ -437,6 +436,7 @@ if predict_btn:
                 "confidence",
                 0
             )
+
 
             formatted_disease = (
                 disease
@@ -547,6 +547,7 @@ line-height:1.6;
                 user_query
             )
 
+
             st.download_button(
                 "📄 Download PDF Report",
                 open(
@@ -557,32 +558,12 @@ line-height:1.6;
             )
 
 
-            # ---------------- ARCHITECTURE ----------------
-
-            st.markdown(
-                "## 🧠 System Architecture"
-            )
-
-            st.code(
-                """
-User → Streamlit UI
-     ↓
-CNN Model
-     ↓
-Disease Prediction
-     ↓
-Gemini LLM
-     ↓
-Result Display
-"""
-            )
-
-
         except Exception as e:
 
             st.error(
                 f"Error: {e}"
             )
+
 
         finally:
 
@@ -597,24 +578,3 @@ Result Display
                 os.remove(
                     image_path
                 )
-
-
-# -----------------------------
-# FOOTER
-# -----------------------------
-st.markdown("---")
-
-st.markdown(
-    """
-<div style="
-text-align:center;
-color:#64748b;
-">
-
-🌱 Smart Agriculture AI Project |
-Final Year MCA Project
-
-</div>
-""",
-    unsafe_allow_html=True
-)
