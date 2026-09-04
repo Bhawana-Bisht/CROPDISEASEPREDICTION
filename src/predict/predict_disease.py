@@ -17,23 +17,44 @@ sys.path.append(BASE_DIR)
 # ---------------------------------
 # Paths
 # ---------------------------------
-MODEL_PATH = os.path.join(BASE_DIR, "models", "resnet18_rice_model.pth")
-CLASS_PATH = os.path.join(BASE_DIR, "models", "class_names.pth")
+MODEL_PATH = os.path.join(
+    BASE_DIR,
+    "models",
+    "resnet18_rice_model.pth"
+)
+
+CLASS_PATH = os.path.join(
+    BASE_DIR,
+    "models",
+    "class_names.pth"
+)
 
 # ---------------------------------
 # Device
 # ---------------------------------
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device(
+    "cuda" if torch.cuda.is_available() else "cpu"
+)
+
 print(f"⚙ Using device: {device}")
 
 # ---------------------------------
 # Load Class Names
 # ---------------------------------
 if os.path.exists(CLASS_PATH):
-    classes = torch.load(CLASS_PATH, map_location=device)
+
+    classes = torch.load(
+        CLASS_PATH,
+        map_location=device
+    )
+
     print(f"✅ Classes loaded: {classes}")
+
 else:
-    raise FileNotFoundError(f"❌ Class file not found: {CLASS_PATH}")
+
+    raise FileNotFoundError(
+        f"❌ Class file not found: {CLASS_PATH}"
+    )
 
 num_classes = len(classes)
 
@@ -41,15 +62,31 @@ num_classes = len(classes)
 # Load Model
 # ---------------------------------
 model = models.resnet18(weights=None)
-model.fc = nn.Linear(model.fc.in_features, num_classes)
+
+model.fc = nn.Linear(
+    model.fc.in_features,
+    num_classes
+)
 
 if os.path.exists(MODEL_PATH):
-    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+
+    model.load_state_dict(
+        torch.load(
+            MODEL_PATH,
+            map_location=device
+        )
+    )
+
     model = model.to(device)
     model.eval()
+
     print(f"✅ Model loaded: {MODEL_PATH}")
+
 else:
-    raise FileNotFoundError(f"❌ Model not found: {MODEL_PATH}")
+
+    raise FileNotFoundError(
+        f"❌ Model not found: {MODEL_PATH}"
+    )
 
 # ---------------------------------
 # Transform
@@ -72,11 +109,17 @@ from llm_module import generate_llm_response
 # ---------------------------------
 # Prediction Function
 # ---------------------------------
-def predict_disease(image_path, user_query="", language="Hindi"):
+def predict_disease(
+    image_path,
+    user_query="",
+    language="Hindi"
+):
 
     if user_query == "":
         try:
-            user_query = input("👨‍🌾 Farmer: Apni problem batayein: ")
+            user_query = input(
+                "👨‍🌾 Farmer: Apni problem batayein: "
+            )
         except Exception:
             user_query = ""
 
@@ -84,27 +127,54 @@ def predict_disease(image_path, user_query="", language="Hindi"):
     # Image Path Fix
     # ---------------------------------
     if not os.path.isabs(image_path):
-        image_path = os.path.join(BASE_DIR, image_path)
+
+        image_path = os.path.join(
+            BASE_DIR,
+            image_path
+        )
 
     if not os.path.exists(image_path):
-        raise FileNotFoundError(f"❌ Image not found: {image_path}")
+
+        raise FileNotFoundError(
+            f"❌ Image not found: {image_path}"
+        )
 
     # ---------------------------------
     # Image Processing
     # ---------------------------------
-    image = Image.open(image_path).convert("RGB")
-    image = transform(image).unsqueeze(0).to(device)
+    image = Image.open(
+        image_path
+    ).convert("RGB")
+
+    image = transform(
+        image
+    ).unsqueeze(0).to(device)
 
     # ---------------------------------
     # Model Prediction
     # ---------------------------------
     with torch.no_grad():
-        outputs = model(image)
-        probs = torch.softmax(outputs, dim=1)
 
-        predicted_idx = torch.argmax(probs, dim=1).item()
-        predicted_class = classes[predicted_idx]
-        confidence = probs[0][predicted_idx].item() * 100
+        outputs = model(image)
+
+        probs = torch.softmax(
+            outputs,
+            dim=1
+        )
+
+        predicted_idx = torch.argmax(
+            probs,
+            dim=1
+        ).item()
+
+        predicted_class = classes[
+            predicted_idx
+        ]
+
+        confidence = (
+            probs[0][predicted_idx].item()
+            * 100
+        )
 
     # ---------------------------------
     # Smart Advice System
@@ -145,7 +215,7 @@ def predict_disease(image_path, user_query="", language="Hindi"):
 - Monitor crop regularly
 """
 
-            else:  # Hinglish
+            else:
 
                 llm_output = """
 🌿 Aapki fasal healthy hai.
@@ -199,7 +269,7 @@ def predict_disease(image_path, user_query="", language="Hindi"):
 - Use resistant varieties
 """
 
-            else:  # Hinglish
+            else:
 
                 llm_output = """
 🦠 Bacterial Blight detect hua hai.
@@ -254,7 +324,7 @@ def predict_disease(image_path, user_query="", language="Hindi"):
 - Maintain proper drainage
 """
 
-            else:  # Hinglish
+            else:
 
                 llm_output = """
 🍂 Brownspot disease detect hui hai.
@@ -307,7 +377,7 @@ def predict_disease(image_path, user_query="", language="Hindi"):
 - Use balanced fertilizer
 """
 
-            else:  # Hinglish
+            else:
 
                 llm_output = """
 🌾 Blast disease detect hua hai.
@@ -360,7 +430,7 @@ def predict_disease(image_path, user_query="", language="Hindi"):
 - Use resistant varieties
 """
 
-            else:  # Hinglish
+            else:
 
                 llm_output = """
 🐛 Tungro virus detect hua hai.
@@ -380,6 +450,7 @@ def predict_disease(image_path, user_query="", language="Hindi"):
         # OTHER DISEASES
         # =========================================
         else:
+
             llm_output = generate_llm_response(
                 predicted_class,
                 user_query
@@ -389,14 +460,19 @@ def predict_disease(image_path, user_query="", language="Hindi"):
 
         print("❌ ERROR:", e)
 
-        llm_output = "⚠ Advice generate nahi ho paayi."
+        llm_output = (
+            "⚠ Advice generate nahi ho paayi."
+        )
 
     # ---------------------------------
     # Final Result
     # ---------------------------------
     result = {
         "disease": predicted_class,
-        "confidence": round(confidence, 2),
+        "confidence": round(
+            confidence,
+            2
+        ),
         "llm_advice": llm_output
     }
 
@@ -404,8 +480,15 @@ def predict_disease(image_path, user_query="", language="Hindi"):
     # Console Output
     # ---------------------------------
     print("\n🌿 Prediction Result")
-    print("⭐ Disease:", predicted_class)
-    print(f"📊 Confidence: {confidence:.2f}%")
+
+    print(
+        "⭐ Disease:",
+        predicted_class
+    )
+
+    print(
+        f"📊 Confidence: {confidence:.2f}%"
+    )
 
     print("\n🤖 AI Advisor:")
     print(llm_output)
@@ -441,8 +524,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     test_image = (
-        args.image or
-        "data/rice_leaf_diseases/Brownspot/brownspot_orig_010.jpg"
+        args.image
+        or
+        "data/rice_leaf_diseases/Brownspot/"
+        "brownspot_orig_010.jpg"
     )
 
     user_query = args.query or ""
@@ -454,4 +539,7 @@ if __name__ == "__main__":
         language
     )
 
-    print("\n✅ Final Output:", result)
+    print(
+        "\n✅ Final Output:",
+        result
+    )
