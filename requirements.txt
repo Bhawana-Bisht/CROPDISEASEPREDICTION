@@ -11,6 +11,9 @@ tensorflow==2.19.0
 keras==3.9.2
 h5py==3.13.0
 
+torch
+torchvision
+
 python-dotenv==1.0.1
 
 SQLAlchemy==2.0.38
