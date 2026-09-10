@@ -1,64 +1,99 @@
-
 # 🌾 Crop Disease Prediction using Deep Learning and Large Language Models (LLMs)
 
-This project is an AI-powered crop disease prediction system that identifies diseases from images of crop leaves using deep learning models. It integrates computer vision with Large Language Models (LLMs) to provide not only accurate disease detection but also detailed explanations, symptoms, causes, and treatment recommendations.
+This project is an AI-powered crop disease prediction system that identifies diseases from crop leaf images using deep learning models. It combines computer vision with Large Language Models (LLMs) to provide farmer-friendly explanations, symptoms, treatment guidance, and prevention recommendations.
+
+The system uses **Google Gemini 2.5 Flash** to generate contextual responses based on the predicted disease, user's question, and selected language.
 
 ## Features
 
 * 🌿 Crop disease detection from leaf images
 * 🤖 Deep learning models for image classification
-* 📊 Model performance evaluation with accuracy, precision, recall, F1-score, and ROC-AUC
-* 📈 Training curves, confusion matrices, and comparison graphs
-* 💬 LLM-generated disease descriptions and treatment recommendations
-* 🌐 Interactive Streamlit web application
-* 🧪 Automated model testing and evaluation
+* 🧠 Transfer learning using multiple CNN architectures
+* 📊 Model evaluation using accuracy, precision, recall, F1-score, and ROC-AUC
+* 📈 Training curves, confusion matrices, and model comparison visualizations
+* 💬 Google Gemini 2.5 Flash for AI-generated disease explanations and recommendations
+* 🌐 Hindi, English, and Hinglish language support
+* 📝 Farmer-friendly symptoms, treatment, and prevention guidance
+* 📄 PDF report generation
+* 💡 Local knowledge-base fallback when the LLM service is unavailable
+* 🖥️ Interactive Streamlit web application
+* 🧪 Testing modules for model and LLM functionality
 * 📂 Modular project structure for easy maintenance and future development
 
 ## Technologies Used
 
 * Python
 * PyTorch
+* Torchvision
 * Streamlit
 * OpenCV
+* Pillow
 * NumPy
 * Pandas
 * Matplotlib
 * Scikit-learn
-* Google Gemini API (LLM)
+* Google Gemini 2.5 Flash
+* Google GenAI SDK
+* ReportLab
 
 ## Project Structure
 
 * `app/` – Application components
-* `src/` – Source code and utilities
+* `src/` – Source code, prediction, training, and utility modules
 * `models/` – Trained deep learning models
-* `outputs/` – Evaluation scripts and generated outputs
-* `results/` – Performance graphs and metrics
-* `tests/` – Testing scripts
-* `streamlit_app.py` – Main web application
+* `outputs/` – Generated outputs and evaluation results
+* `results/` – Model performance results and visualizations
+* `research_outputs/` – Research and experimental outputs
+* `tests/` – Testing modules
+* `disease_info.json` – Local crop disease information used for fallback responses
+* `streamlit_app.py` – Main Streamlit web application
+* `requirements.txt` – Python dependencies
 
 ## Deep Learning Models
+
+The project includes multiple deep learning architectures for crop disease classification:
 
 * EfficientNet-B0
 * MobileNetV2
 * ResNet18
 * VGG16
 
-## Future Improvements
+These models are used for experimentation, training, prediction, and performance evaluation.
 
-* Support for additional crop species
-* Real-time mobile application
-* Multi-language recommendations
-* Cloud deployment
-* Continuous model retraining with new datasets
-* Integration with IoT-based smart farming systems
+## LLM Integration
 
-## Applications
+The project integrates **Google Gemini 2.5 Flash** to provide contextual agricultural assistance after disease prediction.
 
-* Precision agriculture
-* Smart farming
-* Early disease detection
-* Crop yield improvement
-* Decision support for farmers
-* Agricultural research
+The LLM uses:
 
-This project demonstrates the application of Artificial Intelligence, Deep Learning, Computer Vision, and Large Language Models to improve agricultural productivity through intelligent crop disease diagnosis and recommendation systems.
+* Predicted crop disease
+* User's question or problem description
+* Selected language
+
+to generate farmer-friendly information including:
+
+* Disease explanation
+* Symptoms
+* Treatment guidance
+* Prevention recommendations
+
+A local `disease_info.json` knowledge base is also available as a fallback when the Gemini service is unavailable.
+
+## Application Workflow
+
+```text
+Crop Leaf Image
+       ↓
+Image Preprocessing
+       ↓
+Deep Learning Model
+       ↓
+Disease Prediction
+       ↓
+Confidence Score
+       ↓
+Google Gemini 2.5 Flash
+       ↓
+Disease Explanation & Recommendations
+       ↓
+PDF Report
